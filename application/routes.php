@@ -1,5 +1,8 @@
 <?php
 
+
+Route::any('books/(:num?)', array('as'=>'books', 'uses'=> 'books@index'));
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
