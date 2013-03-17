@@ -4,8 +4,20 @@ class Books_Controller extends Base_Controller {
 
   public $restful = true;
 
+
   public function get_index($id = null) {
-    if(is_null($id)){
+    if(isset($_GET['book_name'])){
+      $bookname = $_GET['book_name'];
+      //$searchedBooks = DB::table('books')->where('book_name', 'LIKE', $bookname);
+      $searchedBooks = Book::where('book_name', '=', $bookname)->first();
+      if(is_null($searchedBooks)){
+        $temp = new Book();
+        return $temp->toJson();
+      } else {
+        return $searchedBooks->toJson();
+      }
+    }
+    else if(is_null($id)){
       $allBooks = Book::all();
       return BaseModel::allToJson($allBooks);
     }
@@ -14,6 +26,17 @@ class Books_Controller extends Base_Controller {
       return $book->toJson();
     }
   }
+
+  /*public function get_index($id = null) {
+    if(is_null($id)){
+      $allBooks = Book::all();
+      return BaseModel::allToJson($allBooks);
+    }
+    else{
+      $book = Book::find($id);
+      return $book->toJson();
+    }
+  }*/
 
   public function post_index() {
     $book = Input::json();

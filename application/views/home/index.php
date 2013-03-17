@@ -151,6 +151,14 @@
 				}
 			});
 
+			var SearchView = Backbone.View.extend({
+				el: '.bookAppPanel',
+				render: function(){
+					var template = _.template($('#book-list-template').html(), {books: searchbooks})
+					this.$el.html(template);
+				}
+			});
+
 			var SearchBook = Backbone.View.extend({
 				el: '.searchResultPanel',
 				render: function(){
@@ -161,26 +169,16 @@
 					'submit .search-book-form': 'searchBook'
 				},
 				searchBook: function(ev){
+					that = this;
 					var bookname = document.getElementById('bookname').value;
-					/*this.books.each(function(book){
-						if(book.get('book_name') === bookname){
-							console.log('Found');
-						}
-					});*/
 					searchbooks = new Books();
-					searchbooks.fetch({data: $.param({book_name: bookname})});
-					/*searchbooks.fetch({
-						success: function(books){
-							searchbooks.each(function(book){
-								if(book.get('book_name') === bookname){
-									console.log('success');
-								} else{
-									searchbooks.remove(book);
-								}
-							});
-							console.log(searchbooks);
+					searchbooks.fetch({
+						data: $.param({book_name: bookname}),
+						success: function(searchbooks){
+							var template = _.template($('#search-book-template').html(), {})
+							that.$el.html(template).append(searchView.render());
 						}
-					});*/
+					});
 					return false;
 				}
 			});
@@ -231,6 +229,7 @@
 			var editBook = new EditBook();
 			var searchBook = new SearchBook();
 			var blankView = new BlankView();
+			var searchView = new SearchView();
 
 			var Router = Backbone.Router.extend({
 				routes: {
